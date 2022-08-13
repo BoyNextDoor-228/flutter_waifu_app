@@ -1,48 +1,50 @@
+import 'package:elementary/elementary.dart';
 import "package:flutter/material.dart";
 import 'package:http/http.dart' as http;
+import 'package:waifu_app/one_pic/one_pic_bll/one_picture_widget_model.dart';
 
-class OnePicture extends StatefulWidget {
-  const OnePicture({Key? key}) : super(key: key);
+class OnePicture extends ElementaryWidget<IWaifuWidgetModel> {
+  OnePicture({Key? key}) : super(createWaifuWidgetModel);
 
-  @override
-  State<OnePicture> createState() => _OnePictureState();
-}
-
-class _OnePictureState extends State<OnePicture> with AutomaticKeepAliveClientMixin<OnePicture> {
-
-  late Future<String> imageUrlFuture;
-
-  Future<String> getImageUrl(BuildContext context) async {
-    final waifuUrl = await http.get(Uri.parse("https://api.waifu.pics/sfw/waifu"));
-    String pureWaifuPicUrl = waifuUrl.body.substring(waifuUrl.body.indexOf(":\"")+2, waifuUrl.body.indexOf("\"}"));
-    return pureWaifuPicUrl;
-  }
 
   @override
-  void initState() {
-    super.initState();
-    imageUrlFuture = getImageUrl(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(IWaifuWidgetModel wm) {
     return Container(
+        key: const PageStorageKey<String>("One Waifu Pic"),
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: FutureBuilder<String>(
-            future: imageUrlFuture,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final imageUrl = snapshot.data!;
-                return Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Image.network(imageUrl, fit: BoxFit.cover),
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            }));
+        child: EntityStateNotifierBuilder<String>(
+          listenableEntityState: wm.waifuUrl,
+          builder: (_, infoPicUrls) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Image.network(infoPicUrls!, fit: BoxFit.cover),
+            );
+          },
+          loadingBuilder: (_, __) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        )
+    );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
+
+
+// FutureBuilder<String>(
+// future: imageUrlFuture,
+// builder: (context, snapshot) {
+// if (snapshot.hasData) {
+// final imageUrl = snapshot.data!;
+// return Padding(
+// padding: const EdgeInsets.all(20.0),
+// child: Image.network(imageUrl, fit: BoxFit.cover),
+// );
+// } else {
+// return const Center(child: CircularProgressIndicator());
+// }
+// }
+// )
+
+
+

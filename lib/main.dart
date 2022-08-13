@@ -30,21 +30,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool ifConnected = false;
-
-  void checkIfConnected() async {
-    var result = await Connectivity().checkConnectivity();
-    if (result == ConnectivityResult.none) {
-      ifConnected = false;
-    } else {
-      ifConnected = true;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    checkIfConnected();
   }
 
   @override
@@ -82,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                   child: TabBarView(
                   children: [
                     AllPictures(),
-                    const OnePicture()
+                    OnePicture()
                   ]
             ),
                 );
