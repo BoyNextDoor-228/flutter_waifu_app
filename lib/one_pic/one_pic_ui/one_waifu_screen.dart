@@ -1,11 +1,9 @@
 import 'package:elementary/elementary.dart';
 import "package:flutter/material.dart";
-import 'package:http/http.dart' as http;
 import 'package:waifu_app/one_pic/one_pic_bll/one_picture_widget_model.dart';
 
 class OnePicture extends ElementaryWidget<IWaifuWidgetModel> {
-  OnePicture({Key? key}) : super(createWaifuWidgetModel);
-
+  const OnePicture({Key? key}) : super(createWaifuWidgetModel, key: key);
 
   @override
   Widget build(IWaifuWidgetModel wm) {
@@ -17,7 +15,14 @@ class OnePicture extends ElementaryWidget<IWaifuWidgetModel> {
           builder: (_, infoPicUrls) {
             return Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Image.network(infoPicUrls!, fit: BoxFit.cover),
+              child: Image.network(
+                  infoPicUrls!,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress){
+                    return (loadingProgress == null ? child : const Center(child:CircularProgressIndicator()));
+                  },
+              ),
             );
           },
           loadingBuilder: (_, __) {
@@ -29,22 +34,3 @@ class OnePicture extends ElementaryWidget<IWaifuWidgetModel> {
     );
   }
 }
-
-
-// FutureBuilder<String>(
-// future: imageUrlFuture,
-// builder: (context, snapshot) {
-// if (snapshot.hasData) {
-// final imageUrl = snapshot.data!;
-// return Padding(
-// padding: const EdgeInsets.all(20.0),
-// child: Image.network(imageUrl, fit: BoxFit.cover),
-// );
-// } else {
-// return const Center(child: CircularProgressIndicator());
-// }
-// }
-// )
-
-
-

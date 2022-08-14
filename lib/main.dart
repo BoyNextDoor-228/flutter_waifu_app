@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Waifu App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -41,9 +41,8 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
-          child: AppBar(
+        appBar: AppBar(
+              toolbarHeight: 0,
               backgroundColor: Colors.transparent,
               elevation: 0,
               bottom: const TabBar(
@@ -58,7 +57,6 @@ class _HomePageState extends State<HomePage> {
                 ],
               )
           ),
-        ),
         body: StreamBuilder(
           stream: Connectivity().onConnectivityChanged,
           builder: (context, AsyncSnapshot<ConnectivityResult> snapshot) {
@@ -66,8 +64,8 @@ class _HomePageState extends State<HomePage> {
                 ? const Center(
                     child: Text("No internet connection!")
             )
-                :Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
+                :const Padding(
+                  padding: EdgeInsets.only(top: 10.0),
                   child: TabBarView(
                   children: [
                     AllPictures(),
@@ -81,5 +79,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-

@@ -1,5 +1,6 @@
 import 'package:elementary/elementary.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert' as JSON;
 
 class OnePictureModel extends ElementaryModel {
   final waifuUrl = EntityStateNotifier<String>()..loading();
@@ -12,13 +13,7 @@ class OnePictureModel extends ElementaryModel {
 
 void getImageUrl() async {
   final response = await http.get(Uri.parse("https://api.waifu.pics/sfw/waifu"));
-  String pureWaifuPicUrl = response.body.substring(response.body.indexOf(":\"")+2, response.body.indexOf("\"}"));
-  waifuUrl.content(pureWaifuPicUrl);
+  var dataStringg = JSON.jsonDecode(response.body);
+  waifuUrl.content(dataStringg["url"]);
 }
-
-// Future<String> getImageUrl(BuildContext context) async {
-//   final waifuUrl = await http.get(Uri.parse("https://api.waifu.pics/sfw/waifu"));
-//   String pureWaifuPicUrl = waifuUrl.body.substring(waifuUrl.body.indexOf(":\"")+2, waifuUrl.body.indexOf("\"}"));
-//   return pureWaifuPicUrl;
-// }
 }

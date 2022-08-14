@@ -2,11 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:http/http.dart' as http;
 import 'package:waifu_app/all_pics/all_pics_bll/all_pictures_widget_model.dart';
 
 class AllPictures extends ElementaryWidget<IWaifusWidgetModel> {
-  AllPictures({Key? key}) : super(createWaifusWidgetModel);
+  const AllPictures({Key? key}) : super(createWaifusWidgetModel, key: key);
 
   @override
   Widget build(IWaifusWidgetModel wm) {
@@ -15,7 +14,7 @@ class AllPictures extends ElementaryWidget<IWaifusWidgetModel> {
         child: EntityStateNotifierBuilder<List<String>>(
           listenableEntityState: wm.waifuPicsUrls,
           builder: (_, infoPicsUrls) {
-            return WaifuListView(imagesUrls: infoPicsUrls!);
+            return WaifuList(imagesUrls: infoPicsUrls!);
           },
           loadingBuilder: (_, __) {
             return const Center(
@@ -27,21 +26,9 @@ class AllPictures extends ElementaryWidget<IWaifusWidgetModel> {
   }
 }
 
-
-// Widget WaifuListView(List<String> imagesUrls) => MasonryGridView.count(
-//   key: PageStorageKey<List<String>>(imagesUrls),
-//   itemCount: imagesUrls.length,
-//   crossAxisCount: 2,
-//   mainAxisSpacing: 4,
-//   crossAxisSpacing: 4,
-//   itemBuilder: (context, index) {
-//     return WaifuItem(imagesUrls[index]);
-//   },
-// );
-
-class WaifuListView extends StatelessWidget {
+class WaifuList extends StatelessWidget {
   final List<String> imagesUrls;
-  const WaifuListView({Key? key, required this.imagesUrls }) : super(key: key);
+  const WaifuList({Key? key, required this.imagesUrls }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +66,7 @@ class WaifuItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
               child: CachedNetworkImage(
                 imageUrl: waifuPicUrl,
-                fadeInDuration: const Duration(milliseconds: 100),
+                fadeInDuration: const Duration(milliseconds: 300),
                 placeholder: (context, url) => Transform.scale(
                   scale: 0.25,
                   child: const CircularProgressIndicator(),
@@ -96,20 +83,6 @@ class WaifuItem extends StatelessWidget {
             )
           ],
         )
-
     );
   }
 }
-
-
-
-
-// FutureBuilder<List<String>>(
-// builder: (context, snapshot) {
-// if (snapshot.hasData) {
-// final imagesUrls = snapshot.data!;
-// return WaifuListView(wm.waifuPicsUrls);
-// } else {
-// return const Center(child: CircularProgressIndicator());
-// }
-// }));
